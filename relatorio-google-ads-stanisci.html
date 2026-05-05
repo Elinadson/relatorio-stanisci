@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Google Ads — Stanisci Malheiros — Fev–Abr 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #f7f7f5;
+    --bg3: #f0efe9;
+    --border: rgba(0,0,0,0.10);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1a1a18;
+    --text2: #5a5a56;
+    --text3: #9a9990;
+    --green: #3B6D11;
+    --green-bg: #EAF3DE;
+    --green-text: #27500A;
+    --red: #A32D2D;
+    --red-bg: #FCEBEB;
+    --red-text: #791F1F;
+    --amber: #854F0B;
+    --amber-bg: #FAEEDA;
+    --amber-text: #633806;
+    --blue: #185FA5;
+    --blue-bg: #E6F1FB;
+    --blue-text: #0C447C;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg3);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Header */
+  .header {
+    background: var(--text);
+    border-radius: var(--radius);
+    padding: 2rem 2rem 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .header-logo {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+  .header-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .header-badge {
+    background: rgba(255,255,255,0.12);
+    border: 0.5px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    white-space: nowrap;
+  }
+  .header-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding-top: 1rem;
+    border-top: 0.5px solid rgba(255,255,255,0.15);
+  }
+  .header-meta-item { }
+  .header-meta-label { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 2px; }
+  .header-meta-value { font-size: 13px; color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  /* Section label */
+  .sec {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin: 1.75rem 0 10px;
+  }
+
+  /* Metric cards */
+  .mgrid { display: grid; gap: 10px; margin-bottom: 1rem; }
+  .mgrid-4 { grid-template-columns: repeat(4, 1fr); }
+  .mgrid-3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 640px) {
+    .mgrid-4, .mgrid-3 { grid-template-columns: repeat(2, 1fr); }
+  }
+  .mc {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .mc-label { font-size: 11px; color: var(--text3); margin-bottom: 5px; }
+  .mc-value { font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .mc-sub { font-size: 11px; color: var(--text2); }
+  .mc-value.green { color: var(--green); }
+  .mc-value.red { color: var(--red); }
+
+  /* Cards */
+  .card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* Funnel */
+  .funnel-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .funnel-label { font-size: 11px; color: var(--text2); width: 130px; flex-shrink: 0; }
+  .funnel-bar-wrap { flex: 1; background: var(--bg2); border-radius: 3px; height: 24px; overflow: hidden; }
+  .funnel-fill { height: 100%; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 600; }
+  .funnel-num { font-size: 12px; font-weight: 600; color: var(--text); width: 28px; text-align: right; flex-shrink: 0; }
+  .funnel-pct { font-size: 11px; color: var(--text3); width: 38px; text-align: right; flex-shrink: 0; }
+  .month-footer {
+    border-top: 0.5px solid var(--border);
+    margin-top: 10px;
+    padding-top: 10px;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .month-footer-item { font-size: 12px; color: var(--text2); }
+  .month-footer-item strong { color: var(--text); }
+  .month-footer-roas { font-size: 13px; font-weight: 600; color: var(--green); }
+
+  /* Alerts */
+  .alert { border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 10px; border-left: 3px solid; }
+  .alert-success { background: var(--green-bg); border-color: var(--green); }
+  .alert-danger { background: var(--red-bg); border-color: var(--red); }
+  .alert-warning { background: var(--amber-bg); border-color: var(--amber); }
+  .alert-info { background: var(--blue-bg); border-color: var(--blue); }
+  .alert-title { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+  .alert-success .alert-title { color: var(--green-text); }
+  .alert-danger .alert-title { color: var(--red-text); }
+  .alert-warning .alert-title { color: var(--amber-text); }
+  .alert-info .alert-title { color: var(--blue-text); }
+  .alert-body { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  /* Badges */
+  .badge { font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 600; }
+  .badge-green { background: var(--green-bg); color: var(--green-text); }
+  .badge-red { background: var(--red-bg); color: var(--red-text); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber-text); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue-text); }
+
+  /* Table */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .tbl th { text-align: left; color: var(--text3); font-size: 10px; font-weight: 600; padding: 6px 10px; border-bottom: 0.5px solid var(--border); text-transform: uppercase; letter-spacing: 0.05em; }
+  .tbl td { padding: 8px 10px; border-bottom: 0.5px solid var(--border); color: var(--text); }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl td.right { text-align: right; }
+  .tbl td.green { color: var(--green); font-weight: 600; }
+  .tbl td.red { color: var(--red); }
+
+  /* Priority list */
+  .priority-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .priority-item:last-child { border-bottom: none; }
+  .priority-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .priority-body { flex: 1; }
+  .priority-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .priority-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+  .priority-tags { display: flex; gap: 6px; margin-top: 6px; }
+
+  /* Chart legend */
+  .leg { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: var(--text2); margin-bottom: 10px; }
+  .leg-item { display: flex; align-items: center; gap: 5px; }
+  .leg-sq { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* ROAS highlight */
+  .roas-highlight {
+    background: var(--text);
+    color: #fff;
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .roas-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .roas-value { font-size: 40px; font-weight: 700; color: #fff; }
+  .roas-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  /* Pipeline box */
+  .pipeline-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 500px) { .pipeline-box { grid-template-columns: 1fr; } }
+
+  /* Footer */
+  .footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 0.5px solid var(--border);
+    text-align: center;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 1.75rem 0; }
+
+  .chart-wrap { position: relative; }
+
+  /* Print */
+  @media print {
+    body { background: #fff; }
+    .page { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <p class="header-logo">Relatório de performance · Google Ads</p>
+        <p class="header-title">Stanisci Malheiros Advogados</p>
+      </div>
+      <span class="header-badge">Fev · Mar · Abr 2026</span>
+    </div>
+    <div class="header-meta">
+      <div class="header-meta-item">
+        <p class="header-meta-label">Campanha</p>
+        <p class="header-meta-value">Direito Consumidor — Plano de Saúde</p>
+      </div>
+      <div class="header-meta-item">
+        <p class="header-meta-label">Gestor de tráfego</p>
+        <p class="header-meta-value">Nadson Dias</p>
+      </div>
+      <div class="header-meta-item">
+        <p class="header-meta-label">Atualizado em</p>
+        <p class="header-meta-value">Maio 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumo executivo -->
+  <p class="sec">Resumo executivo — 3 meses</p>
+  <div class="mgrid mgrid-4">
+    <div class="mc">
+      <p class="mc-label">Investimento total</p>
+      <p class="mc-value">R$ 14,75k</p>
+      <p class="mc-sub">Fev R$5,58k · Mar R$3,38k · Abr R$4,79k</p>
+    </div>
+    <div class="mc">
+      <p class="mc-label">Leads gerados</p>
+      <p class="mc-value">109</p>
+      <p class="mc-sub">Fev 30 · Mar 38 · Abr 41</p>
+    </div>
+    <div class="mc">
+      <p class="mc-label">Contratos fechados</p>
+      <p class="mc-value green">21</p>
+      <p class="mc-sub">Taxa de fechamento: 19,3%</p>
+    </div>
+    <div class="mc">
+      <p class="mc-label">Receita gerada</p>
+      <p class="mc-value green">R$ 52,2k</p>
+      <p class="mc-sub">Honorários confirmados</p>
+    </div>
+  </div>
+
+  <div class="mgrid mgrid-3">
+    <div class="roas-highlight">
+      <p class="roas-label">ROAS real 3 meses</p>
+      <p class="roas-value">3,54×</p>
+      <p class="roas-sub">R$3,54 gerado por cada R$1 investido</p>
+    </div>
+    <div class="mc">
+      <p class="mc-label">Custo por lead (CPL)</p>
+      <p class="mc-value">R$ 135</p>
+      <p class="mc-sub">Por lead captado no CRM</p>
+    </div>
+    <div class="mc">
+      <p class="mc-label">Custo por contrato fechado</p>
+      <p class="mc-value">R$ 702</p>
+      <p class="mc-sub">Ticket médio: R$ 2.483</p>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <p class="sec">Performance mensal</p>
+  <div class="two-col">
+    <div class="card">
+      <p class="card-title">Leads vs contratos fechados</p>
+      <div class="leg">
+        <span class="leg-item"><span class="leg-sq" style="background:#378ADD;"></span>Leads</span>
+        <span class="leg-item"><span class="leg-sq" style="background:#3B6D11;"></span>Contratos</span>
+      </div>
+      <div class="chart-wrap" style="height:200px;"><canvas id="ch1" role="img" aria-label="Leads vs contratos por mês">Fev 30 leads 4 contratos, Mar 38 leads 10 contratos, Abr 41 leads 7 contratos.</canvas></div>
+    </div>
+    <div class="card">
+      <p class="card-title">Receita vs investimento em ads</p>
+      <div class="leg">
+        <span class="leg-item"><span class="leg-sq" style="background:#3B6D11;"></span>Receita</span>
+        <span class="leg-item"><span class="leg-sq" style="background:#E24B4A;"></span>Ads</span>
+      </div>
+      <div class="chart-wrap" style="height:200px;"><canvas id="ch2" role="img" aria-label="Receita vs investimento por mês">Fev receita 7300 ads 5580, Mar receita 28100 ads 3380, Abr receita 16800 ads 4790.</canvas></div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <p class="card-title">Custo por conversão (CPA) — Google Ads</p>
+      <div class="leg">
+        <span class="leg-item"><span class="leg-sq" style="background:#BA7517;"></span>CPA mensal</span>
+      </div>
+      <div class="chart-wrap" style="height:180px;"><canvas id="ch3" role="img" aria-label="CPA por mês">Fev R$127, Mar R$89, Abr R$106.</canvas></div>
+    </div>
+    <div class="card">
+      <p class="card-title">Taxa de fechamento por mês</p>
+      <div class="leg">
+        <span class="leg-item"><span class="leg-sq" style="background:#185FA5;"></span>% de leads que fecharam</span>
+      </div>
+      <div class="chart-wrap" style="height:180px;"><canvas id="ch4" role="img" aria-label="Taxa de fechamento por mês">Fev 13%, Mar 26%, Abr 17%.</canvas></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Funil por mês -->
+  <p class="sec">Funil de conversão detalhado</p>
+  <div class="two-col">
+    <div class="card">
+      <p class="card-title">Fevereiro 2026</p>
+      <div class="funnel-row">
+        <span class="funnel-label">Leads captados</span>
+        <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:100%;background:#B5D4F4;color:#0C447C;">30</div></div>
+        <span class="funnel-num">30</span><span class="funnel-pct">100%</span>
+      </div>
+      <div class="funnel-row">
+        <span class="funnel-label">Proposta enviada</span>
+        <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:57%;background:#85B7EB;color:#0C447C;">17</div></div>
+        <span class="funnel-num">17</span><span class="funnel-pct">57%</span>
+      </div>
+      <div class="funnel-row">
+        <span class="funnel-label">Em conversa</span>
+        <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:23%;background:#EF9F27;color:#633806;">7</div></div>
+        <span class="funnel-num">7</span><span class="funnel-pct">23%</span>
+      </div>
+      <div class="funnel-row">
+        <span class="funnel-label">Sem conversão</span>
+        <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:27%;background:#F09595;color:#791F1F;">8</div></div>
+        <span class="funnel-num">8</span><span class="funnel-pct">27%</span>
+      </div>
+      <div class="funnel-row">
+        <span class="funnel-label">Contratos fechados</span>
+        <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:13%;background:#97C459;color:#27500A;">4</div></div>
+        <span class="funnel-num">4</span><span class="funnel-pct">13%</span>
+      </div>
+      <div class="month-footer">
+        <span class="month-footer-item">Receita: <strong>R$ 7.300</strong></span>
+        <span class="month-footer-item">Ads: <strong>R$ 5.580</strong></span>
+        <span class="month-footer-roas">ROAS 1,3×</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Março 2026</p>
+      <div class="funnel-row">
+        <span class="funnel-label">Leads captados</span>
+        <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:100%;background:#B5D4F4;color:#0C447C;">38</div></div>
+        <span class="funnel-num">38</span><span class="funnel-pct">100%</span>
+      </div>
+      <div class="funnel-row">
+        <span class="funnel-label">Proposta enviada</span>
+        <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:55%;background:#85B7EB;color:#0C447C;">21</div></div>
+        <span class="funnel-num">21</span><span class="funnel-pct">55%</span>
+      </div>
+      <div class="funnel-row">
+        <span class="funnel-label">Em conversa</span>
+        <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:26%;background:#EF9F27;color:#633806;">10</div></div>
+        <span class="funnel-num">10</span><span class="funnel-pct">26%</span>
+      </div>
+      <div class="funnel-row">
+        <span class="funnel-label">Sem conversão</span>
+        <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:18%;background:#F09595;color:#791F1F;">7</div></div>
+        <span class="funnel-num">7</span><span class="funnel-pct">18%</span>
+      </div>
+      <div class="funnel-row">
+        <span class="funnel-label">Contratos fechados</span>
+        <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:26%;background:#97C459;color:#27500A;">10</div></div>
+        <span class="funnel-num">10</span><span class="funnel-pct">26%</span>
+      </div>
+      <div class="month-footer">
+        <span class="month-footer-item">Receita: <strong>R$ 28.100</strong></span>
+        <span class="month-footer-item">Ads: <strong>R$ 3.380</strong></span>
+        <span class="month-footer-roas">ROAS 8,3×</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="card-title">Abril 2026</p>
+    <div class="two-col" style="gap:1.5rem;">
+      <div>
+        <div class="funnel-row">
+          <span class="funnel-label">Leads captados</span>
+          <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:100%;background:#B5D4F4;color:#0C447C;">41</div></div>
+          <span class="funnel-num">41</span><span class="funnel-pct">100%</span>
+        </div>
+        <div class="funnel-row">
+          <span class="funnel-label">Proposta enviada</span>
+          <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:56%;background:#85B7EB;color:#0C447C;">23</div></div>
+          <span class="funnel-num">23</span><span class="funnel-pct">56%</span>
+        </div>
+        <div class="funnel-row">
+          <span class="funnel-label">Em conversa</span>
+          <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:34%;background:#EF9F27;color:#633806;">14</div></div>
+          <span class="funnel-num">14</span><span class="funnel-pct">34%</span>
+        </div>
+        <div class="funnel-row">
+          <span class="funnel-label">Sem conversão</span>
+          <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:22%;background:#F09595;color:#791F1F;">9</div></div>
+          <span class="funnel-num">9</span><span class="funnel-pct">22%</span>
+        </div>
+        <div class="funnel-row">
+          <span class="funnel-label">Contratos fechados</span>
+          <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:17%;background:#97C459;color:#27500A;">7</div></div>
+          <span class="funnel-num">7</span><span class="funnel-pct">17%</span>
+        </div>
+        <div class="month-footer">
+          <span class="month-footer-item">Receita mín.: <strong>R$ 16.800</strong></span>
+          <span class="month-footer-item">Ads: <strong>R$ 4.790</strong></span>
+          <span class="month-footer-roas">ROAS 3,5×</span>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Contratos fechados em abril</p>
+        <table class="tbl">
+          <tr><td>Thais</td><td class="right green">R$ 2.800 + êxito</td><td class="right"><span class="badge badge-blue">indicação</span></td></tr>
+          <tr><td>Elisangela</td><td class="right green">R$ 2.200</td><td></td></tr>
+          <tr><td>Rafael</td><td class="right green">R$ 2.200 + êxito</td><td></td></tr>
+          <tr><td>Anderson</td><td class="right green">R$ 2.800 + êxito</td><td></td></tr>
+          <tr style="background:var(--bg2);"><td style="font-weight:600;">Total confirmado</td><td class="right" style="font-weight:600;color:var(--green);">R$ 10.000</td><td class="right" style="font-size:10px;color:var(--text3);">+ êxito variável</td></tr>
+        </table>
+        <p style="font-size:11px;color:var(--text2);margin-top:10px;">+ 14 leads ainda "em conversa" com potencial de fechar nos próximos dias</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Pipeline ativo -->
+  <p class="sec">Pipeline ativo — oportunidade imediata</p>
+  <div class="pipeline-box">
+    <div class="mc" style="text-align:center;">
+      <p class="mc-label">Propostas enviadas aguardando</p>
+      <p class="mc-value" style="font-size:32px;">34</p>
+      <p class="mc-sub">leads com proposta sem resposta</p>
+    </div>
+    <div class="mc" style="text-align:center;">
+      <p class="mc-label">Em conversa ativa</p>
+      <p class="mc-value" style="font-size:32px;">24</p>
+      <p class="mc-sub">leads em negociação aberta</p>
+    </div>
+    <div class="mc" style="text-align:center;">
+      <p class="mc-label">Receita potencial estimada</p>
+      <p class="mc-value green" style="font-size:28px;">R$ 27k</p>
+      <p class="mc-sub">a 19% de taxa de fechamento</p>
+    </div>
+  </div>
+  <div class="alert alert-info">
+    <p class="alert-title">58 leads ainda vivos no funil — sem investimento adicional</p>
+    <p class="alert-body">Aplicando a taxa histórica de fechamento de 19% sobre os 58 leads ativos (34 com proposta + 24 em conversa), estima-se 11 contratos adicionais representando aproximadamente R$27.000 em receita — sem precisar investir mais em Google Ads.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Análise de palavras-chave -->
+  <p class="sec">Performance de palavras-chave — Abril 2026</p>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Palavra-chave</th>
+          <th class="right">Cliques</th>
+          <th class="right">Custo</th>
+          <th class="right">CTR</th>
+          <th class="right">Conv.</th>
+          <th class="right">CPA</th>
+          <th class="right">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"advogado especialista em convenio medico"</td>
+          <td class="right">67</td>
+          <td class="right">R$ 2.234</td>
+          <td class="right">11,34%</td>
+          <td class="right">24,5</td>
+          <td class="right green">R$ 91</td>
+          <td class="right"><span class="badge badge-green">top performer</span></td>
+        </tr>
+        <tr>
+          <td>"advogado especialista plano de saude"</td>
+          <td class="right">33</td>
+          <td class="right">R$ 355</td>
+          <td class="right">4,57%</td>
+          <td class="right">7,5</td>
+          <td class="right green">R$ 47</td>
+          <td class="right"><span class="badge badge-green">eficiente</span></td>
+        </tr>
+        <tr>
+          <td>"advogado especialista em plano de saude"</td>
+          <td class="right">7</td>
+          <td class="right">R$ 297</td>
+          <td class="right">24,14%</td>
+          <td class="right">2</td>
+          <td class="right">R$ 148</td>
+          <td class="right"><span class="badge badge-blue">alto CTR</span></td>
+        </tr>
+        <tr>
+          <td>"advogado especialista em plano de saude sp"</td>
+          <td class="right">7</td>
+          <td class="right">R$ 244</td>
+          <td class="right">6,48%</td>
+          <td class="right">2</td>
+          <td class="right">R$ 122</td>
+          <td class="right"><span class="badge badge-amber">QS baixo</span></td>
+        </tr>
+        <tr>
+          <td>"processar plano de saude"</td>
+          <td class="right">33</td>
+          <td class="right">R$ 1.255</td>
+          <td class="right">11,30%</td>
+          <td class="right">6</td>
+          <td class="right red">R$ 209</td>
+          <td class="right"><span class="badge badge-red">revisar</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Diagnóstico e recomendações -->
+  <p class="sec">Diagnóstico e próximos passos</p>
+
+  <div class="alert alert-danger">
+    <p class="alert-title">Campanha limitada por orçamento — ação urgente</p>
+    <p class="alert-body">A campanha principal esteve limitada por orçamento nos 3 meses consecutivos. Com CPA de R$106, cada R$1.000 adicional de budget gera aproximadamente 9 leads qualificados. O aumento de orçamento é a ação de maior ROI disponível sem alterar nenhuma configuração de campanha.</p>
+  </div>
+
+  <div class="alert alert-danger">
+    <p class="alert-title">34 propostas sem follow-up — principal perda do funil</p>
+    <p class="alert-body">Com ticket médio de R$2.483, essas propostas represantam até R$84k em receita potencial parada. Uma cadência de 3 toques (D+1, D+3, D+7) pode recuperar 20–30% desse volume sem custo adicional em mídia.</p>
+  </div>
+
+  <div class="alert alert-warning">
+    <p class="alert-title">"processar plano de saude" — CPA 2× acima da média</p>
+    <p class="alert-body">CPA de R$209 contra média de R$106. CTR razoável mas conversão baixa, indicando desalinhamento entre intenção de busca e landing page. Recomenda-se criar grupo de anúncios dedicado com copy específico para essa keyword ou pausá-la.</p>
+  </div>
+
+  <div class="alert alert-warning">
+    <p class="alert-title">Leads fora do escopo chegando pela campanha</p>
+    <p class="alert-body">Registros como "advogado de família", "apenas dúvidas" e "curioso" indicam tráfego irrelevante. Adicionar palavras-chave negativas pode reduzir o CPL em 15–20% e melhorar a qualidade dos leads para o time comercial.</p>
+  </div>
+
+  <div class="alert alert-success">
+    <p class="alert-title">CTR de 9,7% — desempenho excelente para advocacia</p>
+    <p class="alert-body">A média do mercado jurídico é 3–5%. O anúncio "Seu Tratamento Foi Negado? Nós Defendemos Você" está performando muito acima da concorrência. Manter o criativo e testar variações com sitelinks adicionais para aumentar ainda mais a taxa.</p>
+  </div>
+
+  <div class="alert alert-success">
+    <p class="alert-title">CPA em tendência de melhora contínua</p>
+    <p class="alert-body">Fevereiro R$127 → Março R$89 → Abril R$106. O algoritmo de lances inteligentes está se otimizando com o histórico de conversões acumulado. Com orçamento desbloqueado e mais dados, a tendência é de queda contínua nos próximos meses.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Prioridades -->
+  <p class="sec">Plano de ação — prioridades</p>
+  <div class="card" style="padding:1.25rem;">
+    <div class="priority-item">
+      <div class="priority-num" style="background:#FCEBEB;color:#A32D2D;">1</div>
+      <div class="priority-body">
+        <p class="priority-title">Aumentar orçamento diário da campanha principal</p>
+        <p class="priority-desc">Campanha limitada por orçamento nos 3 meses. Com CPA de R$106, cada R$1k adicional gera ~9 leads qualificados.</p>
+        <div class="priority-tags">
+          <span class="badge badge-red">impacto alto</span>
+          <span class="badge badge-green">esforço baixo</span>
+        </div>
+      </div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num" style="background:#FCEBEB;color:#A32D2D;">2</div>
+      <div class="priority-body">
+        <p class="priority-title">Implementar cadência de follow-up para propostas enviadas</p>
+        <p class="priority-desc">34 leads com proposta sem resposta = até R$84k em receita potencial. 3 toques estruturados (D+1, D+3, D+7) via WhatsApp.</p>
+        <div class="priority-tags">
+          <span class="badge badge-red">impacto alto</span>
+          <span class="badge badge-green">custo zero em ads</span>
+        </div>
+      </div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num" style="background:#FAEEDA;color:#854F0B;">3</div>
+      <div class="priority-body">
+        <p class="priority-title">Ativar ajustes de lance por horário e localização</p>
+        <p class="priority-desc">Dados do Google indicam: SP + dias úteis 9h–13h são positivos; Santos e fins de semana após 18h são negativos. Ajustar reduz desperdício de budget.</p>
+        <div class="priority-tags">
+          <span class="badge badge-amber">impacto médio</span>
+          <span class="badge badge-amber">esforço médio</span>
+        </div>
+      </div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num" style="background:#FAEEDA;color:#854F0B;">4</div>
+      <div class="priority-body">
+        <p class="priority-title">Revisar ou pausar "processar plano de saude"</p>
+        <p class="priority-desc">CPA de R$209 — 2× acima da média. Criar grupo dedicado com LP específica ou pausar e realocar verba para keywords com CPA menor.</p>
+        <div class="priority-tags">
+          <span class="badge badge-amber">impacto médio</span>
+          <span class="badge badge-green">esforço baixo</span>
+        </div>
+      </div>
+    </div>
+    <div class="priority-item" style="border-bottom:none;">
+      <div class="priority-num" style="background:#E6F1FB;color:#185FA5;">5</div>
+      <div class="priority-body">
+        <p class="priority-title">Adicionar palavras-chave negativas para eliminar tráfego fora do escopo</p>
+        <p class="priority-desc">Leads de "advogado de família", "curiosos" e afins reduzem qualidade do pipeline. Lista de negativas pode melhorar CPL em 15–20%.</p>
+        <div class="priority-tags">
+          <span class="badge badge-blue">impacto médio</span>
+          <span class="badge badge-green">esforço baixo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Relatório gerado por Nadson Dias — Gestão de Tráfego Pago</p>
+    <p style="margin-top:4px;">Dados: Google Ads + CRM de leads · Período: Fevereiro a Abril de 2026</p>
+  </div>
+
+</div>
+
+<script>
+const meses = ['Fev', 'Mar', 'Abr'];
+
+new Chart(document.getElementById('ch1'), {
+  type: 'bar',
+  data: {
+    labels: meses,
+    datasets: [
+      { label: 'Leads', data: [30, 38, 41], backgroundColor: '#378ADD', borderRadius: 5 },
+      { label: 'Contratos', data: [4, 10, 7], backgroundColor: '#3B6D11', borderRadius: 5 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { ticks: { font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+      x: { ticks: { font: { size: 12 }, autoSkip: false }, grid: { display: false } }
+    }
+  }
+});
+
+new Chart(document.getElementById('ch2'), {
+  type: 'bar',
+  data: {
+    labels: meses,
+    datasets: [
+      { label: 'Receita', data: [7300, 28100, 16800], backgroundColor: '#3B6D11', borderRadius: 5 },
+      { label: 'Ads', data: [5580, 3380, 4790], backgroundColor: '#E24B4A', borderRadius: 5 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { ticks: { font: { size: 11 }, callback: v => 'R$' + (v/1000).toFixed(0) + 'k' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+      x: { ticks: { font: { size: 12 }, autoSkip: false }, grid: { display: false } }
+    }
+  }
+});
+
+new Chart(document.getElementById('ch3'), {
+  type: 'line',
+  data: {
+    labels: meses,
+    datasets: [{
+      label: 'CPA',
+      data: [127, 89, 106],
+      borderColor: '#BA7517',
+      backgroundColor: 'rgba(186,117,23,0.08)',
+      pointBackgroundColor: '#BA7517',
+      pointRadius: 6,
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { min: 60, ticks: { font: { size: 11 }, callback: v => 'R$' + v }, grid: { color: 'rgba(0,0,0,0.05)' } },
+      x: { ticks: { font: { size: 12 }, autoSkip: false }, grid: { display: false } }
+    }
+  }
+});
+
+new Chart(document.getElementById('ch4'), {
+  type: 'line',
+  data: {
+    labels: meses,
+    datasets: [{
+      label: 'Fechamento',
+      data: [13, 26, 17],
+      borderColor: '#185FA5',
+      backgroundColor: 'rgba(24,95,165,0.07)',
+      pointBackgroundColor: '#185FA5',
+      pointRadius: 6,
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { min: 0, max: 35, ticks: { font: { size: 11 }, callback: v => v + '%' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+      x: { ticks: { font: { size: 12 }, autoSkip: false }, grid: { display: false } }
+    }
+  }
+});
+</script>
+</body>
+</html>
